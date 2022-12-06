@@ -1,10 +1,12 @@
 from flask import Flask, jsonify, request, Response
+from flask_cors import CORS, cross_origin
 import pymongo
 import certifi
 from bson import json_util
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
+CORS(app)
 
 from models.mesas import Mesas
 from models.partidos import Partidos
@@ -17,7 +19,7 @@ db = client.test
 
 baseDatos = client["DB-Votaciones"] 
 # print(baseDatos.list_collection_names())
-
+@cross_origin
 @app.route('/')
 def home():
     return jsonify({"mensaje": "APP Votación"})
@@ -27,6 +29,7 @@ def home():
 # ------------- MESAS ----------------------
 # Metods: POST
 # Opcion para agregar mesas a la base de datos.
+@cross_origin
 @app.route('/mesas', methods=['POST'])
 def addMesa():
     mesa = request.json['mesa']
@@ -44,6 +47,7 @@ def addMesa():
 
 # Metods: GET
 # Opcion para obtener los datos todas las mesas registradas.
+@cross_origin
 @app.route('/mesas', methods=['GET'])
 def getMesas():
     mesas = baseDatos.mesas.find()
@@ -51,6 +55,7 @@ def getMesas():
     return Response (response, mimetype='application/json')
 
 # Opcion para obtener los datos de una mesa registrada por su id.
+@cross_origin
 @app.route('/mesas/<id>', methods=['GET'])
 def getMesa(id):
     mesa = baseDatos.mesas.find_one({"_id": ObjectId(id)})
@@ -59,6 +64,7 @@ def getMesa(id):
 
 # Metods: PUT
 # Opcion para actualizar los datos de una mesa por su id.
+@cross_origin
 @app.route('/mesas/update/<id>', methods=['PUT'])
 def updateMesa(id):
     mesa = request.json['mesa']
@@ -73,6 +79,7 @@ def updateMesa(id):
 
 # Metods: DELETE
 #Opción para eliminar una mesa por su id.
+@cross_origin
 @app.route('/mesas/delete/<id>', methods=['DELETE'])
 def deleteMesa(id):
     baseDatos.mesas.delete_one({"_id": ObjectId(id)})
@@ -82,6 +89,7 @@ def deleteMesa(id):
 # ------------- PARTIDOS ----------------------
 # Metods: POST
 # Opcion para agregar partidos a la base de datos.
+@cross_origin
 @app.route('/partidos', methods=['POST'])
 def addPartido():
     nombrePartido = request.json['nombrePartido']
@@ -99,6 +107,7 @@ def addPartido():
 
 # Metods: GET
 # Opcion para obtener los datos todos los partidos registrados.
+@cross_origin
 @app.route('/partidos', methods=['GET'])
 def getPartidos():
     partidos = baseDatos.partidos.find()
@@ -106,6 +115,7 @@ def getPartidos():
     return Response (response, mimetype='application/json')
 
 # Opcion para obtener los datos de un partido registrado por su id.
+@cross_origin
 @app.route('/partidos/<id>', methods=['GET'])
 def getPartido(id):
     partido = baseDatos.partidos.find_one({"_id": ObjectId(id)})
@@ -114,6 +124,7 @@ def getPartido(id):
 
 # Metods: PUT
 # Opcion para actualizar los datos de un partido por su id.
+@cross_origin
 @app.route('/partidos/update/<id>', methods=['PUT'])
 def updatePartido(id):
     nombrePartido = request.json['nombrePartido']
@@ -128,6 +139,7 @@ def updatePartido(id):
 
 # Metods: DELETE
 #Opción para eliminar un partido por su id.
+@cross_origin
 @app.route('/partidos/delete/<id>', methods=['DELETE'])
 def deletePart(id):
     baseDatos.partidos.delete_one({"_id": ObjectId(id)})
@@ -137,6 +149,7 @@ def deletePart(id):
 # ------------- CANDIDATOS ----------------------
 # Metods: POST
 # Opcion para agregar candidatos a la base de datos.
+@cross_origin
 @app.route('/candidatos', methods=['POST'])
 def addCandidato():
     numero = request.json['numero']
@@ -160,6 +173,7 @@ def addCandidato():
 
 # Metods: GET
 # Opcion para obtener los datos todos los candidatos registrados.
+@cross_origin
 @app.route('/candidatos', methods=['GET'])
 def getCandidatos():
     candidatos = baseDatos.candidatos.find()
@@ -167,6 +181,7 @@ def getCandidatos():
     return Response (response, mimetype='application/json')
 
 # Opcion para obtener los datos de un candidato registrado por su id.
+@cross_origin
 @app.route('/candidatos/<id>', methods=['GET'])
 def getCandidato(id):
     candidato = baseDatos.candidatos.find_one({"_id": ObjectId(id)})
@@ -175,6 +190,7 @@ def getCandidato(id):
 
 # Metods: PUT
 # Opcion para actualizar los datos de un candidato por su id.
+@cross_origin
 @app.route('/candidatos/update/<id>', methods=['PUT'])
 def updateCandidato(id):
     numero = request.json['numero']
@@ -193,6 +209,7 @@ def updateCandidato(id):
 
 # Metods: DELETE
 #Opción para eliminar un candidato por su id.
+@cross_origin
 @app.route('/candidatos/delete/<id>', methods=['DELETE'])
 def deleteCand(id):
     baseDatos.candidatos.delete_one({"_id": ObjectId(id)})
@@ -202,6 +219,7 @@ def deleteCand(id):
 # ------------- RESULTADOS ----------------------
 # Metods: POST
 # Opcion para agregar resultados a la base de datos.
+@cross_origin
 @app.route('/resultados', methods=['POST'])
 def addResultado():
     mesa = request.json['mesa']
@@ -223,6 +241,7 @@ def addResultado():
 
 # Metods: GET
 # Opcion para obtener los datos todos los partidos registradas.
+@cross_origin
 @app.route('/resultados', methods=['GET'])
 def getResultados():
     resultados = baseDatos.resultados.find()
@@ -230,6 +249,7 @@ def getResultados():
     return Response (response, mimetype='application/json')
 
 # Opcion para obtener los datos de un partido registrado por su id.
+@cross_origin
 @app.route('/resultados/<id>', methods=['GET'])
 def getResultado(id):
     resultado = baseDatos.resultados.find_one({"_id": ObjectId(id)})
@@ -238,6 +258,7 @@ def getResultado(id):
 
 # Metods: PUT
 # Opcion para actualizar los datos de un resultado por su id.
+@cross_origin
 @app.route('/resultados/update/<id>', methods=['PUT'])
 def updateResultado(id):
     mesa = request.json['mesa']
@@ -255,6 +276,7 @@ def updateResultado(id):
 
 # Metods: DELETE
 #Opción para eliminar un resultado por su id.
+@cross_origin
 @app.route('/resultados/delete/<id>', methods=['DELETE'])
 def deleteRes(id):
     baseDatos.resultados.delete_one({"_id": ObjectId(id)})
@@ -262,6 +284,7 @@ def deleteRes(id):
 
 
 #----------------ERROR-----------------------
+@cross_origin
 @app.errorhandler(404)
 def notFound(error=None):
     message ={
@@ -273,4 +296,4 @@ def notFound(error=None):
     return response
 
 if __name__ == '__main__':
-    app.run(debug=True, port=9999)
+    app.run(host="0.0.0.0", debug=True, port=9999)
