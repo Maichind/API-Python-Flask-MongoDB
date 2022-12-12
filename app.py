@@ -157,16 +157,18 @@ def addCandidato():
     nombre = request.json['nombre']
     apellido = request.json['apellido']
     partido = request.json['partido']
+    segundaVuelta = request.json['segundaVuelta']
 
-    if numero and cedula and nombre and apellido and partido:
-        candidatoNew = Candidatos(numero, cedula, nombre, apellido, partido)
+    if numero and cedula and nombre and apellido and partido and segundaVuelta:
+        candidatoNew = Candidatos(numero, cedula, nombre, apellido, partido, segundaVuelta)
         baseDatos.candidatos.insert_one(candidatoNew.toDBCollection())
         response = jsonify({
             "numero": numero,
             "cedula,": cedula,
             "nombre": nombre,
             "apellido": apellido,
-            "partido": partido
+            "partido": partido,
+            "segundaVuelta": segundaVuelta
         })
         return response
     return notFound()
@@ -198,11 +200,12 @@ def updateCandidato(id):
     nombre = request.json['nombre']
     apellido = request.json['apellido']
     partido = request.json['partido']
+    segundaVuelta = request.json['segundaVuelta']
 
-    if numero and cedula and nombre and apellido and partido:
+    if numero and cedula and nombre and apellido and partido and segundaVuelta:
         baseDatos.candidatos.update_one({"_id": ObjectId(id)}, {'$set' : 
                                         {'numero' : numero, 'cedula' : cedula, 'nombre' : nombre, 
-                                        'apellido' : apellido, 'partido' : partido}})
+                                        'apellido' : apellido, 'partido' : partido, 'segundaVuelta': segundaVuelta}})
         response = jsonify({'message' : 'Candidato ' + id + ' actualizado correctamente'})
         return response
     return notFound()
@@ -223,18 +226,20 @@ def deleteCand(id):
 @app.route('/resultados', methods=['POST'])
 def addResultado():
     mesa = request.json['mesa']
-    numeroCandidato = request.json['numeroCandidato']
-    partido = request.json['partido']
+    nombre = request.json['nombre']
     votos = request.json['votos']
+    nombre2 = request.json['nombre2']
+    votos2 = request.json['votos2']
 
-    if mesa and numeroCandidato and partido and votos:
-        resultadoNew = Resultados(mesa, numeroCandidato, partido, votos)
+    if mesa and nombre and votos and nombre2 and votos2:
+        resultadoNew = Resultados(mesa, nombre, votos, nombre2, votos2)
         baseDatos.resultados.insert_one(resultadoNew.toDBCollection())
         response = jsonify({
             "mesa": mesa,
-            "numeroCandidato": numeroCandidato,
-            "partido": partido,
-            "votos": votos
+            "nombre": nombre,
+            "votos": votos,
+            "nombre2": nombre2,
+            "votos": votos2
         })
         return response
     return notFound()
@@ -262,14 +267,15 @@ def getResultado(id):
 @app.route('/resultados/update/<id>', methods=['PUT'])
 def updateResultado(id):
     mesa = request.json['mesa']
-    numeroCandidato = request.json['numeroCandidato']
-    partido = request.json['partido']
+    nombre = request.json['nombre']
     votos = request.json['votos']
+    nombre2 = request.json['nombre2']
+    votos2 = request.json['votos2']
 
-    if mesa and numeroCandidato and partido and votos:
+    if mesa and nombre and votos and nombre2 and votos2:
         baseDatos.resultados.update_one({"_id": ObjectId(id)}, {'$set' : 
-                                        {'mesa' : mesa, 'numeroCandidato' : numeroCandidato, 'partido' : partido, 
-                                        'votos' : votos}})
+                                        {'mesa' : mesa, 'nombre' : nombre, 'votos' : votos, 
+                                        'nombre2' : nombre2, 'votos2' : votos2}})
         response = jsonify({'message' : 'Resultado ' + id + ' actualizado correctamente'})
         return response
     return notFound()
